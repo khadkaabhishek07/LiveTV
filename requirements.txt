@@ -5,3 +5,4 @@ strawberry-graphql[django]
 PyJWT
 django-cors-headers
 gunicorn
+dj-database-url
