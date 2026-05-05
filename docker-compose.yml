@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    volumes:
+      - ./app:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_NAME=postgres
+      - DB_USER=postgres.nrmqmuzrgpcrghwkfzbl
+      - DB_PASSWORD=2jokjB8f27XbiruP
+      - DB_HOST=aws-1-ap-northeast-2.pooler.supabase.com
+      - DB_PORT=6543

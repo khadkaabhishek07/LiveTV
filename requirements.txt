@@ -1,0 +1,6 @@
+django
+djangorestframework
+psycopg2-binary
+strawberry-graphql[django]
+PyJWT
+django-cors-headers
