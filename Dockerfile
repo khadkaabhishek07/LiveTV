@@ -2,7 +2,6 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install system dependencies (optional but safer)
 RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
@@ -13,8 +12,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./app .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
-# Use Gunicorn instead of runserver
 CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
