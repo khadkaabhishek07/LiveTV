@@ -4,3 +4,4 @@ psycopg2-binary
 strawberry-graphql[django]
 PyJWT
 django-cors-headers
+gunicorn
