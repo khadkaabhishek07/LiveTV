@@ -22,13 +22,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', 'dev-insecure-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-#ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.18.26']
-ALLOWED_HOSTS = ['*']
+def _csv_env_list(name: str, default: str):
+    raw = os.getenv(name, default)
+    return [item.strip() for item in raw.split(',') if item.strip()]
+
+
+ALLOWED_HOSTS = _csv_env_list(
+    'ALLOWED_HOSTS',
+    '127.0.0.1,localhost,192.168.18.26,livetv-4b2q.onrender.com,sittaimatv.onrender.com',
+)
 
 
 # Application definition
@@ -83,11 +90,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+DATABASE_URL = os.environ.get('DATABASE_URL')
 DATABASES = {
     'default': dj_database_url.parse(
-        os.environ.get("DATABASE_URL"),
+        DATABASE_URL,
         conn_max_age=600,
-        ssl_require=True
+        ssl_require=bool(DATABASE_URL and DATABASE_URL.startswith(('postgres://', 'postgresql://'))),
     )
 }
 
@@ -163,3 +171,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://192.168.18.26:8080',
     'https://sittaimatv.onrender.com',
 ]
+
+STREAM_UPSTREAM_ALLOWED_HOSTS = _csv_env_list(
+    'STREAM_UPSTREAM_ALLOWED_HOSTS',
+    '110.44.127.109',
+)

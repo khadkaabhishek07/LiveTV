@@ -4,6 +4,8 @@ psycopg2-binary
 strawberry-graphql[django]
 PyJWT
 django-cors-headers
+dj-database-url
+whitenoise
 gunicorn
 dj-database-url
 whitenoise
