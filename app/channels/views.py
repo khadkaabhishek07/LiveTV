@@ -92,19 +92,23 @@ def _rewrite_playlist(playlist_text: str, request, token: str, base_url: str):
 def stream_playback(request, token: str):
     channel, error = _get_channel_for_token(token)
     if error:
+        print("TOKEN ERROR")
         return error
 
+    print("CHANNEL:", channel.stream_source_url)
+
     if not _is_allowed_upstream_url(channel.stream_source_url, channel):
+        print("HOST BLOCKED")
         return HttpResponseForbidden('Upstream stream host is not allowed.')
 
     try:
         body, final_url, _ = _fetch_upstream(channel.stream_source_url)
-    except Exception:
+        print("FETCH SUCCESS:", final_url)
+    except Exception as e:
+        print("FETCH ERROR:", str(e))
         return HttpResponseForbidden('Unable to fetch upstream playlist.')
 
-    playlist_text = body.decode('utf-8', errors='replace')
-    rewritten_playlist = _rewrite_playlist(playlist_text, request, token, final_url)
-    return HttpResponse(rewritten_playlist, content_type='application/vnd.apple.mpegurl')
+    return HttpResponse("OK")
 
 
 def stream_proxy(request, token: str):
