@@ -30,18 +30,23 @@ def _get_allowed_upstream_hosts():
 
 def _is_allowed_upstream_url(url: str, channel: Channel):
     parsed = urlparse(url)
+
     if parsed.scheme not in ('http', 'https'):
         return False
+
     if not parsed.hostname:
         return False
 
-    channel_host = urlparse(channel.stream_source_url).hostname or ''
-    channel_host = channel_host.lower()
     upstream_host = parsed.hostname.lower()
 
     allowed_hosts = _get_allowed_upstream_hosts()
-    if allowed_hosts and upstream_host not in allowed_hosts:
-        return False
+
+    # ✅ If allowed_hosts is defined → ONLY use it
+    if allowed_hosts:
+        return upstream_host in allowed_hosts
+
+    # fallback (if no env config)
+    channel_host = (urlparse(channel.stream_source_url).hostname or '').lower()
     return upstream_host == channel_host
 
 
