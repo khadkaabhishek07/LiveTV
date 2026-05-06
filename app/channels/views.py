@@ -11,9 +11,12 @@ from .models import Channel
 # 🔥 Fetch upstream stream
 def _fetch_upstream(url: str):
     req = Request(url, headers={
-        'User-Agent': 'Mozilla/5.0',
-        'Accept': '*/*'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+        'Accept': '*/*',
+        'Referer': url,
+        'Origin': 'https://google.com',
     })
+
     with urlopen(req, timeout=15) as upstream:
         body = upstream.read()
         final_url = upstream.geturl()
